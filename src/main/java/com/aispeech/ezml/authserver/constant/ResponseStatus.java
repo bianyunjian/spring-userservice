@@ -1,7 +1,7 @@
 package com.aispeech.ezml.authserver.constant;
 
-
 import com.aispeech.ezml.authserver.support.StringGetter;
+import com.aispeech.ezml.authserver.support.base.BaseResponse;
 
 /**
  * 响应状态枚举类

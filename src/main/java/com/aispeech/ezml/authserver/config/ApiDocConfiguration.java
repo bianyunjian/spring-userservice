@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
         info = @Info(
                 title = "AISPEECH EZML AUTH SERVER API",
                 version = "v0.0.1",
-                description = "思必驰标注训练一体化平台 -- 认证服务"
+                description = "思必驰标注训练一体化平台 -- 鉴权服务"
         )
 )
 @Configuration

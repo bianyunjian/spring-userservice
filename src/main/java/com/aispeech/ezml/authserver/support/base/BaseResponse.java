@@ -2,6 +2,7 @@ package com.aispeech.ezml.authserver.support.base;
 
 import com.aispeech.ezml.authserver.support.ErrorCoder;
 import com.aispeech.ezml.authserver.constant.ResponseStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,17 +10,22 @@ import lombok.Data;
  *
  * @author ZhangXi
  */
+@Schema(description = "通用HTTP响应")
 @Data
 public class BaseResponse<T> {
 
     private static final String DEFAULT_MESSAGE = "";
 
+    @Schema(description = "请求结果状态")
     private ResponseStatus status;
 
+    @Schema(description = "错误码，用于定位问题", example = "100001")
     private Integer errorCode;
 
+    @Schema(description = "所需数据，可能为空")
     private T data;
 
+    @Schema(description = "请求状态或错误码的补充说明")
     private String message;
 
 
