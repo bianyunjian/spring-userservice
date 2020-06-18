@@ -3,7 +3,7 @@ package com.aispeech.ezml.authserver.support;
 import com.aispeech.ezml.authserver.support.base.Available;
 
 /**
- * 获取字符串
+ * 获取字符串接口
  *
  * @author ZhangXi
  */

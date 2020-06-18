@@ -1,7 +1,7 @@
 package com.aispeech.ezml.authserver.support.base;
 
 /**
- * 获取某个具体对象
+ * 获取某个具体对象接口
  *
  * @author ZhangXi
  */
