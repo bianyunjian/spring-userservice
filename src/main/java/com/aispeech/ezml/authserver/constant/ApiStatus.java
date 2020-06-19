@@ -9,7 +9,7 @@ import com.aispeech.ezml.authserver.support.base.BaseResponse;
  *
  * @author ZhangXi
  */
-public enum ResponseStatus implements StringGetter {
+public enum ApiStatus implements StringGetter {
 
     /**
      * 响应状态
@@ -21,7 +21,7 @@ public enum ResponseStatus implements StringGetter {
 
     private String enumValue;
 
-    ResponseStatus(String enumValue) {
+    ApiStatus(String enumValue) {
         this.enumValue = enumValue;
     }
 

@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.config;
 
+import com.aispeech.ezml.authserver.constant.ApiStatus;
 import com.aispeech.ezml.authserver.constant.SysECoder;
 import com.aispeech.ezml.authserver.support.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,8 @@ public class GlobalExceptionHandler {
     public BaseResponse handleException(Exception e) {
         log.error("处理未知异常", e);
         BaseResponse response = new BaseResponse();
-        String message = "";
-        response.fail(message, SysECoder.INNER_ERROR);
+        response.setStatus(ApiStatus.FAILURE);
+        response.fail("未知异常", SysECoder.INNER_ERROR);
         return response;
     }
 

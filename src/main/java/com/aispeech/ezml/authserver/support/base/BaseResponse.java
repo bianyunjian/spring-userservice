@@ -1,7 +1,7 @@
 package com.aispeech.ezml.authserver.support.base;
 
 import com.aispeech.ezml.authserver.support.ErrorCoder;
-import com.aispeech.ezml.authserver.constant.ResponseStatus;
+import com.aispeech.ezml.authserver.constant.ApiStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class BaseResponse<T> {
     private static final String DEFAULT_MESSAGE = "";
 
     @Schema(description = "请求结果状态")
-    private ResponseStatus status;
+    private ApiStatus status;
 
     @Schema(description = "错误码，用于定位问题", example = "100001")
     private Integer errorCode;
@@ -30,7 +30,7 @@ public class BaseResponse<T> {
 
 
     public void success() {
-        this.status = ResponseStatus.SUCCESS;
+        this.status = ApiStatus.SUCCESS;
     }
 
     public void success(String message) {
@@ -44,7 +44,7 @@ public class BaseResponse<T> {
     }
 
     public void fail() {
-        this.status = ResponseStatus.FAILURE;
+        this.status = ApiStatus.FAILURE;
     }
 
     public void fail(String message) {
