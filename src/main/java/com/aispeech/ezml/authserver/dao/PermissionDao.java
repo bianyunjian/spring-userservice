@@ -1,14 +1,14 @@
 package com.aispeech.ezml.authserver.dao;
 
-import com.aispeech.ezml.authserver.model.Role;
+import com.aispeech.ezml.authserver.model.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 角色数据DAO
+ * 权限数据DAO
  *
  * @author ZhangXi
  */
 @Mapper
-public interface RoleDao extends BaseMapper<Role> {
+public interface PermissionDao extends BaseMapper<Permission> {
 }

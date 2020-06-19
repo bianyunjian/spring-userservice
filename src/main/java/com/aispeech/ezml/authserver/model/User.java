@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.model;
 
+import com.aispeech.ezml.authserver.menum.UserStatus;
 import lombok.Data;
 
 /**
@@ -9,4 +10,15 @@ import lombok.Data;
  */
 @Data
 public class User {
+
+    private Integer id;
+
+    private String loginName;
+
+    private String userName;
+
+    private String password;
+
+    private UserStatus status;
+
 }

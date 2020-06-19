@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.model;
 
+import com.aispeech.ezml.authserver.menum.RoleStatus;
 import lombok.Data;
 
 /**
@@ -9,4 +10,11 @@ import lombok.Data;
  */
 @Data
 public class Role {
+
+    private Integer id;
+
+    private String roleName;
+
+    private RoleStatus status;
+
 }

@@ -1,5 +1,7 @@
 package com.aispeech.ezml.authserver.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
@@ -9,4 +11,12 @@ import lombok.Data;
  */
 @Data
 public class UserRole {
+
+    @TableId(type = IdType.UUID)
+    private String id;
+
+    private Integer userId;
+
+    private Integer roleId;
+
 }
