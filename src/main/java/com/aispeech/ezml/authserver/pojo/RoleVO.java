@@ -39,4 +39,14 @@ public class RoleVO extends Role {
         return super.getStatus();
     }
 
+    public RoleVO() {
+    }
+
+    public RoleVO(Role role) {
+        if (null != role) {
+            this.setId(role.getId());
+            this.setRoleName(role.getRoleName());
+            this.setStatus(role.getStatus());
+        }
+    }
 }
