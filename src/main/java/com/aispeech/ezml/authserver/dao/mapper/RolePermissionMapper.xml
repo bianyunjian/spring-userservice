@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aispeech.ezml.authserver.dao.RolePermissionDao">
+
+    <sql id="table">role_permission</sql>
+
+    <insert id="batchInsert" parameterType="list">
+        insert into <include refid="table"/> (id, role_id, permission_id) values
+        <foreach collection="list" item="rp" separator=",">
+            (
+            #{rp.id, jdbcType=VARCHAR},
+            #{rp.roleId, jdbcType=INTEGER},
+            #{rp.permissionId, jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+    
+    <delete id="deleteByRoleId" parameterType="int">
+        delete from <include refid="table"/> where role_id = #{id, jdbcType=INTEGER};
+    </delete>
+
+</mapper>

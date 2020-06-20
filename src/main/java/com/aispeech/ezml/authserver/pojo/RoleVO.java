@@ -4,6 +4,7 @@ import com.aispeech.ezml.authserver.menum.RoleStatus;
 import com.aispeech.ezml.authserver.model.Role;
 import com.aispeech.ezml.authserver.validation.group.GUpd;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public class RoleVO extends Role {
     }
 
     @NotBlank
-    @Size(min = 6, max = 20)
+    @Length(min = 2, max = 20)
     @Schema(description = "角色名称", example = "管理员", format = "必须为6~20位字母、数字组合")
     @Override
     public String getRoleName() {

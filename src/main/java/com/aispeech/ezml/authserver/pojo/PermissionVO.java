@@ -15,7 +15,10 @@ public class PermissionVO extends Permission {
     }
 
     public PermissionVO(Permission permission) {
-        this.setId(permission.getId());
-        this.setPermissionName(permission.getPermissionName());
+        if (null != permission) {
+            this.setId(permission.getId());
+            this.setPermissionName(permission.getPermissionName());
+        }
     }
+
 }
