@@ -11,6 +11,9 @@ import lombok.Data;
 @Data
 public class User {
 
+    public static final String COL_USER_NAME = "user_name";
+    public static final String COL_LOGIN_NAME = "login_name";
+
     private Integer id;
 
     private String loginName;

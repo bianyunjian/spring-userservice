@@ -23,9 +23,4 @@ public interface PermissionDao extends BaseMapper<Permission> {
      */
     List<PermissionVO> findListByRoleId(@Param("id") Integer id);
 
-
-
-
-
-
 }

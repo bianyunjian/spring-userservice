@@ -2,7 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aispeech.ezml.authserver.dao.RoleDao">
 
+    <sql id="table">role</sql>
 
-
+    <select id="findRoleByUserId" resultType="role">
+        select R.* from <include refid="table"/> as R
+        left join user_role as UR on UR.role_id = R.id
+        where UR.user_id = #{userId, jdbcType=VARCHAR}
+    </select>
 
 </mapper>

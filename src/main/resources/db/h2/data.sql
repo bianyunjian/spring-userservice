@@ -1,4 +1,4 @@
-insert into `user` values (1, 'admin', '超级管理员','{noop}12345', 0);
+insert into `user` values (1, 'admin', '超级管理员','MTIzNDU2', 0);
 
 insert into role values (1, '管理员', 0);
 insert into role values (2, '测试员', 0);

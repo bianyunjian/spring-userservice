@@ -12,9 +12,16 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserProVO extends User {
+public class UserProVO extends UserVO {
 
     @Schema(description = "用户对应角色数据")
     private RoleVO role;
 
+    public UserProVO() {
+    }
+
+    public UserProVO(User user, RoleVO role) {
+        super(user);
+        this.role = role;
+    }
 }

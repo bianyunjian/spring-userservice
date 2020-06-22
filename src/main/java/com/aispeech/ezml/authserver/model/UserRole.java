@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class UserRole {
 
+    public static final String COL_USER_ID = "user_id";
+
     @TableId(type = IdType.UUID)
     private String id;
 
@@ -19,4 +21,11 @@ public class UserRole {
 
     private Integer roleId;
 
+    public UserRole() {
+    }
+
+    public UserRole(Integer userId, Integer roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }
