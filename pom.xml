@@ -33,11 +33,17 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--todo 暂时不注册微服务-->
-        <!--<dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- 注册微服务 -->
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>-->
+            <!--<version>2.2.3.RELEASE</version>-->
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
