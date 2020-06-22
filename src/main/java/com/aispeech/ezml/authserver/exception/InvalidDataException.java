@@ -24,4 +24,7 @@ public class InvalidDataException extends Exception {
         return this;
     }
 
+    public ErrorCoder getErrorCode() {
+        return errorCode;
+    }
 }

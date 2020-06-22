@@ -1,8 +1,11 @@
 package com.aispeech.ezml.authserver.service.impl;
 
+import com.aispeech.ezml.authserver.constant.DataECoder;
 import com.aispeech.ezml.authserver.dao.RoleDao;
 import com.aispeech.ezml.authserver.dao.UserDao;
 import com.aispeech.ezml.authserver.dao.UserRoleDao;
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
+import com.aispeech.ezml.authserver.menum.UserStatus;
 import com.aispeech.ezml.authserver.model.Role;
 import com.aispeech.ezml.authserver.model.User;
 import com.aispeech.ezml.authserver.model.UserRole;
@@ -66,14 +69,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PagedData<UserProVO> queryPagedUsers(PagedParams pagedParams, UserQueryParams queryParams) {
-        IPage<User> userPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
-        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userPage = userDao.selectPage(userPage, userQueryWrapper);
-        long total = userPage.getTotal();
+        long total = userDao.queryUserCountWithParams(queryParams);
         PagedData<UserProVO> data = new PagedData<>();
         data.setTotal(total);
         if (total > 0) {
-            List<User> userList = userPage.getRecords();
+            int start = (pagedParams.getPageNum()-1) * pagedParams.getPageSize();
+            List<User> userList = userDao.queryUserListWithParams(queryParams, start, pagedParams.getPageSize());
             List<UserProVO> voList = new ArrayList<>(userList.size());
             for (User user : userList) {
                 Role role = roleDao.findRoleByUserId(user.getId());
@@ -86,31 +87,42 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public UserProVO addUser(UserDTO userDTO) {
-        //todo 前置检查
+    public UserProVO addUser(UserDTO userDTO) throws InvalidDataException {
         User user = userDTO.getUser();
+        user.setStatus(UserStatus.NORMAL.getDbValue());
+        // 检查登录名是否重复
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq(User.COL_LOGIN_NAME, user.getLoginName());
+        User repeatOne = userDao.selectOne(userQueryWrapper);
+        if (null != repeatOne) {
+            throw new InvalidDataException("用户登录名重复，loginName="+user.getLoginName()).with(DataECoder.USER_REPEATED);
+        }
         userDao.insert(user);
         Integer roleId = userDTO.getRoleId();
-        Role existedRole = roleDao.selectById(roleId);
-        if (null == existedRole) {
-            return null;
+        Role role = roleDao.selectById(roleId);
+        // 检查角色是否存在
+        if (null == role) {
+            throw new InvalidDataException("用户对应角色不存在，roleId="+roleId).with(DataECoder.USER_ROLE_NOT_EXIST);
         }
-        userRoleDao.insert(new UserRole(user.getId(), existedRole.getId()));
-        return new UserProVO(user, new RoleVO(existedRole));
+        userRoleDao.insert(new UserRole(user.getId(), role.getId()));
+        return new UserProVO(user, new RoleVO(role));
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public UserProVO updateUser(UserDTO userDTO) {
+    public UserProVO updateUser(UserDTO userDTO) throws InvalidDataException {
         User user = userDTO.getUser();
         User oldOne = userDao.selectById(user.getId());
+        // fixme 用户名可以重复么?
         if (null == oldOne) {
-            return null;
+            throw new InvalidDataException("用户不存在，id="+user.getId()).with(DataECoder.USER_NOT_EXIST);
+        } else if (oldOne.getStatus().equals(UserStatus.DISABLED.getDbValue())) {
+            throw new InvalidDataException("用户已禁用，id="+user.getId()).with(DataECoder.USER_DISABLED);
         }
         Integer roleId = userDTO.getRoleId();
         Role role = roleDao.selectById(roleId);
         if (null == role) {
-            return null;
+            throw new InvalidDataException("用户对应角色不存在，roleId="+roleId).with(DataECoder.USER_ROLE_NOT_EXIST);
         }
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
         userRoleQueryWrapper.eq(UserRole.COL_USER_ID, user.getId());
@@ -121,13 +133,47 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteUser(Integer userId) {
-        if (null == userId) {
-            return;
+    public void deleteUser(Integer userId) throws InvalidDataException {
+        User user = null;
+        if (null != userId) {
+            user = userDao.selectById(userId);
+        }
+        if (null == user) {
+            throw new InvalidDataException("用户不存在，id="+userId).with(DataECoder.USER_NOT_EXIST);
         }
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
         userRoleQueryWrapper.eq(UserRole.COL_USER_ID, userId);
         userRoleDao.delete(userRoleQueryWrapper);
         userDao.deleteById(userId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void enableUser(Integer userId) throws InvalidDataException {
+        User user = null;
+        if (null != userId) {
+            user = userDao.selectById(userId);
+        }
+        if (null == user) {
+            throw new InvalidDataException("用户不存在，id="+userId).with(DataECoder.USER_NOT_EXIST);
+        }
+        // 启用用户
+        user.setStatus(UserStatus.NORMAL.getDbValue());
+        userDao.updateById(user);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void disableUser(Integer userId) throws InvalidDataException {
+        User user = null;
+        if (null != userId) {
+            user = userDao.selectById(userId);
+        }
+        if (null == user) {
+            throw new InvalidDataException("用户不存在，id="+userId).with(DataECoder.USER_NOT_EXIST);
+        }
+        // 禁用用户
+        user.setStatus(UserStatus.DISABLED.getDbValue());
+        userDao.updateById(user);
     }
 }

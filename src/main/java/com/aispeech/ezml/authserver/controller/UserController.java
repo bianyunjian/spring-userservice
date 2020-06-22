@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.controller;
 
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.exception.InvalidParamException;
 import com.aispeech.ezml.authserver.pojo.UserDTO;
 import com.aispeech.ezml.authserver.pojo.UserInfoVO;
@@ -45,7 +46,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "根据用户名获取用户信息")
+    @Operation(summary = "根据登录名获取用户信息")
     @PostMapping(path = "/getUserInfo")
     public UserInfoResponse getUserInfo(@Validated @RequestBody UserInfoRequest request) {
         String userName = request.getUserName();
@@ -77,7 +78,7 @@ public class UserController {
     @PostMapping(path = "/add")
     public UserProResponse addUser(
             @Validated({Default.class, GAdd.class})
-            @RequestBody UserEditRequest request) {
+            @RequestBody UserEditRequest request) throws InvalidDataException {
         UserProVO data = userService.addUser(request.buildData());
         UserProResponse response = new UserProResponse();
         response.success("新增用户成功", data);
@@ -88,7 +89,7 @@ public class UserController {
     @PostMapping(path = "/update")
     public UserProResponse updateUser(
             @Validated({Default.class, GUpd.class})
-            @RequestBody UserEditRequest request) {
+            @RequestBody UserEditRequest request) throws InvalidDataException {
         UserProVO data = userService.updateUser(request.buildData());
         UserProResponse response = new UserProResponse();
         response.success("修改用户成功", data);
@@ -97,10 +98,28 @@ public class UserController {
 
     @Operation(summary = "删除用户")
     @PostMapping(path = "/delete")
-    public BaseResponse deleteUser(@Validated @RequestBody UserDelRequest request) {
+    public BaseResponse deleteUser(@Validated @RequestBody UserIdRequest request) throws InvalidDataException {
         userService.deleteUser(request.getId());
         BaseResponse response = new BaseResponse();
         response.success("删除用户成功");
+        return response;
+    }
+
+    @Operation(summary = "启用用户")
+    @PostMapping(path = "/enable")
+    public BaseResponse enableUser(@Validated @RequestBody UserIdRequest request) throws InvalidDataException {
+        userService.enableUser(request.getId());
+        BaseResponse response = new BaseResponse();
+        response.success("启用用户成功");
+        return response;
+    }
+
+    @Operation(summary = "禁用用户")
+    @PostMapping(path = "/disable")
+    public BaseResponse disableUser(@Validated @RequestBody UserIdRequest request) throws InvalidDataException {
+        userService.disableUser(request.getId());
+        BaseResponse response = new BaseResponse();
+        response.success("禁用用户成功");
         return response;
     }
 
@@ -110,6 +129,7 @@ public class UserController {
     @Data
     private static class UserInfoRequest {
         @NotBlank
+        @Schema(description = "用户登录名", example = "admin@aispeech.com")
         private String userName;
     }
 
@@ -159,11 +179,13 @@ public class UserController {
         }
     }
 
-    @Schema(description = "用户删除请求")
+    @Schema(description = "用户ID请求")
     @Data
-    private static class UserDelRequest {
+    private static class UserIdRequest {
         @NotNull
+        @Schema(description = "用户ID", example = "1")
         private Integer id;
     }
+
 
 }

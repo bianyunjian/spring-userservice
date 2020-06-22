@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.service;
 
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.pojo.UserDTO;
 import com.aispeech.ezml.authserver.pojo.UserInfoVO;
 import com.aispeech.ezml.authserver.pojo.UserProVO;
@@ -41,18 +42,30 @@ public interface UserService {
      * @param userDTO {@link UserDTO}
      * @return {@link UserProVO}
      */
-    UserProVO addUser(UserDTO userDTO);
+    UserProVO addUser(UserDTO userDTO) throws InvalidDataException;
 
     /**
      * 修改用户数据
      * @param userDTO {@link UserDTO}
      * @return {@link UserProVO}
      */
-    UserProVO updateUser(UserDTO userDTO);
+    UserProVO updateUser(UserDTO userDTO) throws InvalidDataException;
 
     /**
      * 删除用户数据
      * @param userId 用户ID
      */
-    void deleteUser(Integer userId);
+    void deleteUser(Integer userId) throws InvalidDataException;
+
+    /**
+     * 启用用户
+     * @param userId 用户ID
+     */
+    void enableUser(Integer userId) throws InvalidDataException;
+
+    /**
+     * 禁用用户
+     * @param userId 用户ID
+     */
+    void disableUser(Integer userId) throws InvalidDataException;
 }

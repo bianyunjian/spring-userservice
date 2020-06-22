@@ -18,10 +18,7 @@ public enum UserStatus {
     NORMAL(0, "正常"),
     DISABLED(1, "禁用");
 
-    @EnumValue
-    @JsonValue
     private Integer dbValue;
-
     private String desc;
 
     UserStatus(Integer dbValue, String desc) {

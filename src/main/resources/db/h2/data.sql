@@ -1,4 +1,4 @@
-insert into `user` values (1, 'admin', '超级管理员','MTIzNDU2', 0);
+insert into `user` values (1, 'admin1@aispeech.com', '超级管理员1','MTIzNDU2', 'admin1@aispeech.com', '研发部', '架构师1', '2020-06-16 14:37:20', 0);
 
 insert into role values (1, '管理员', 0);
 insert into role values (2, '测试员', 0);

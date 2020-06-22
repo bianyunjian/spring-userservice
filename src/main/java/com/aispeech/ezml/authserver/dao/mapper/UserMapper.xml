@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aispeech.ezml.authserver.dao.UserDao">
+    
+    <sql id="table">user</sql>
+
+    <select id="queryUserListWithParams" resultType="user">
+        select U.* from <include refid="table"/> as U
+        left join user_role as UR on U.id = UR.user_id
+        <where>
+            <if test="query.userName != null">
+                <bind name="likeUserName" value="'%'+query.userName+'%'"/>
+                and U.user_name like #{likeUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.roleId != null">
+                and UR.role_id = #{query.roleId, jdbcType=INTEGER}
+            </if>
+        </where>
+        order by U.last_login_time desc
+        limit #{start, jdbcType=INTEGER}, #{size, jdbcType=INTEGER}
+    </select>
+
+    <select id="queryUserCountWithParams" resultType="long">
+        select count(U.id) from <include refid="table"/> as U
+        left join user_role as UR on U.id = UR.user_id
+        <where>
+            <if test="query.userName != null">
+                <bind name="likeUserName" value="'%'+query.userName+'%'"/>
+                and U.user_name like #{likeUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.roleId != null">
+                and UR.role_id = #{query.roleId, jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
 
 </mapper>

@@ -3,6 +3,8 @@ package com.aispeech.ezml.authserver.constant;
 import com.aispeech.ezml.authserver.support.ErrorCoder;
 
 /**
+ * 实体数据错误码枚举
+ *
  * @author ZhangXi
  */
 public enum DataECoder implements ErrorCoder {
@@ -13,6 +15,7 @@ public enum DataECoder implements ErrorCoder {
     USER_NOT_EXIST(100101, "用户数据不存在"),
     USER_REPEATED(100102, "用户数据重复"),
     USER_ROLE_NOT_EXIST(100103, "用户对应角色不存在"),
+    USER_DISABLED(100104, "用户已禁用"),
     /**
      * 无效角色数据错误码
      */

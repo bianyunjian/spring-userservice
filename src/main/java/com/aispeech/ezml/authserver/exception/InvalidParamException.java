@@ -25,4 +25,7 @@ public class InvalidParamException extends Exception {
         return this;
     }
 
+    public ErrorCoder getErrorCode() {
+        return errorCode;
+    }
 }
