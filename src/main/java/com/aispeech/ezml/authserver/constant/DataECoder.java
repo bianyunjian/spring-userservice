@@ -27,7 +27,9 @@ public enum DataECoder implements ErrorCoder {
     /**
      * 权限数据错误码
      */
-    PERMISSION_NOT_EXIST(100301, "权限数据不存在");
+    PERMISSION_NOT_EXIST(100301, "权限数据不存在"),
+    PERMISSION_REPEATED(100302, "权限数据重复"),
+    PERMISSION_HAS_ROLES(100303, "权限已关联角色");
 
     private Integer errorCode;
     private String desc;

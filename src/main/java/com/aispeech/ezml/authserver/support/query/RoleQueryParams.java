@@ -14,5 +14,4 @@ import lombok.EqualsAndHashCode;
 @Schema(description = "角色分页查询参数")
 @Data
 public class RoleQueryParams extends QueryParams {
-    //fixme 检查是否有特定参数
 }

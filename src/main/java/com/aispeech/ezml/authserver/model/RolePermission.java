@@ -14,6 +14,8 @@ import java.util.UUID;
 @Data
 public class RolePermission {
 
+    public static final String COL_PERMISSION_ID = "permission_id";
+
     private String id;
 
     private Integer roleId;

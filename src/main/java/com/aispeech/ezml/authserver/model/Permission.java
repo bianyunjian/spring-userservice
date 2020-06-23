@@ -1,5 +1,7 @@
 package com.aispeech.ezml.authserver.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
@@ -10,6 +12,9 @@ import lombok.Data;
 @Data
 public class Permission {
 
+    public static final String COL_PERMISSION_NAME = "permission_name";
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     private String permissionName;
@@ -20,7 +25,7 @@ public class Permission {
     private Integer isAssigned;
 
     /**
-     * 权限类型：0-全部,1-仅用户界面
+     * 权限类型：1-页面,2-接口
      */
     private Integer type;
 
