@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
  *
  * @author ZhangXi
  */
+@Deprecated
 @Service
 public class AuthServiceImpl implements AuthService {
 }

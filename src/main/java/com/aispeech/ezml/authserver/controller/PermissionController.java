@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.controller;
 
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.pojo.PermissionVO;
 import com.aispeech.ezml.authserver.service.PermissionService;
 import com.aispeech.ezml.authserver.support.base.BaseResponse;
@@ -40,7 +41,7 @@ public class PermissionController {
             summary = "获取全部权限"
     )
     @GetMapping(path = "/all")
-    public PermissionListResponse getAll() {
+    public PermissionListResponse getAll() throws InvalidDataException {
         List<PermissionVO> data = permissionService.getAll();
         PermissionListResponse response = new PermissionListResponse();
         response.success("获取全部权限成功", data);

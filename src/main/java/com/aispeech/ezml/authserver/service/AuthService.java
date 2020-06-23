@@ -5,5 +5,6 @@ package com.aispeech.ezml.authserver.service;
  *
  * @author ZhangXi
  */
+@Deprecated
 public interface AuthService {
 }

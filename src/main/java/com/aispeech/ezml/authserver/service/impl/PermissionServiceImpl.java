@@ -1,6 +1,8 @@
 package com.aispeech.ezml.authserver.service.impl;
 
+import com.aispeech.ezml.authserver.constant.DataECoder;
 import com.aispeech.ezml.authserver.dao.PermissionDao;
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.model.Permission;
 import com.aispeech.ezml.authserver.pojo.PermissionVO;
 import com.aispeech.ezml.authserver.service.PermissionService;
@@ -22,10 +24,10 @@ public class PermissionServiceImpl implements PermissionService {
     private PermissionDao permissionDao;
 
     @Override
-    public List<PermissionVO> getAll() {
+    public List<PermissionVO> getAll() throws InvalidDataException {
         List<Permission> permissions = permissionDao.selectList(null);
         if (null == permissions) {
-            return null;
+            throw new InvalidDataException("无权限数据！").with(DataECoder.PERMISSION_NOT_EXIST);
         }
         List<PermissionVO> data = new ArrayList<>(permissions.size());
         for (Permission permission : permissions) {

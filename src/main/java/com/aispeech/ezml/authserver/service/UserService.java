@@ -20,14 +20,14 @@ public interface UserService {
      * @param userName 用户名称
      * @return {@link UserInfoVO}
      */
-    UserInfoVO getUserInfoByLoginName(String userName);
+    UserInfoVO getUserInfoByLoginName(String userName) throws InvalidDataException;
 
     /**
      * 根据ID获取用户数据
      * @return {@link UserProVO}
      * @param id
      */
-    UserProVO getUserById(Integer id);
+    UserProVO getUserById(Integer id) throws InvalidDataException;
 
     /**
      * 查询用户分页列表

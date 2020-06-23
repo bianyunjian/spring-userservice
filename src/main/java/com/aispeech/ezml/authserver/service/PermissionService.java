@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.service;
 
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.pojo.PermissionVO;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public interface PermissionService {
      * 获取全部权限
      * @return {@link List<PermissionVO>}
      */
-    List<PermissionVO> getAll();
+    List<PermissionVO> getAll() throws InvalidDataException;
 
 }

@@ -15,6 +15,12 @@ import java.time.LocalDateTime;
 @Data
 public class Role {
 
+    public static final String COL_GMT_CREATE = "gmt_create";
+    public static final String COL_ROLE_NAME = "role_name";
+
+    public static final int IS_DEFAULT_TRUE = 1;
+    public static final int IS_DEFAULT_FALSE = 0;
+
     @TableId(type = IdType.AUTO)
     private Integer id;
 

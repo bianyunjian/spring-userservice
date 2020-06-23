@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.controller;
 
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.exception.InvalidParamException;
 import com.aispeech.ezml.authserver.pojo.RoleDTO;
 import com.aispeech.ezml.authserver.pojo.RoleProVO;
@@ -53,7 +54,7 @@ public class RoleController {
     @GetMapping(path = "/{id}")
     public RoleProResponse getOne(
             @Schema(description = "角色ID", example = "1")
-            @PathVariable(name = "id") Integer id) {
+            @PathVariable(name = "id") Integer id) throws InvalidDataException {
         RoleProVO data = roleService.getRoleById(id);
         RoleProResponse response = new RoleProResponse();
         response.success("角色数据获取成功", data);
@@ -85,7 +86,7 @@ public class RoleController {
     @PostMapping(path = "/add")
     public RoleProResponse addRole(
             @Validated({Default.class, GAdd.class})
-            @RequestBody RoleEditRequest roleEditRequest) {
+            @RequestBody RoleEditRequest roleEditRequest) throws InvalidDataException {
         RoleProVO data = roleService.addRole(roleEditRequest.buildData());
         RoleProResponse response = new RoleProResponse();
         response.success("新增角色成功", data);
@@ -100,7 +101,7 @@ public class RoleController {
     @PostMapping(path = "/update")
     public RoleProResponse updateRole(
             @Validated({Default.class, GUpd.class})
-            @RequestBody RoleEditRequest roleEditRequest) {
+            @RequestBody RoleEditRequest roleEditRequest) throws InvalidDataException {
         RoleProVO data = roleService.updateRole(roleEditRequest.buildData());
         RoleProResponse response = new RoleProResponse();
         response.success("修改角色成功", data);
@@ -113,7 +114,7 @@ public class RoleController {
      */
     @Operation(summary = "删除角色")
     @PostMapping(path = "/delete")
-    public BaseResponse deleteRole(@Validated @RequestBody RoleDelRequest roleDelRequest) {
+    public BaseResponse deleteRole(@Validated @RequestBody RoleDelRequest roleDelRequest) throws InvalidDataException {
         roleService.deleteRole(roleDelRequest.getId());
         BaseResponse response = new BaseResponse();
         response.success("删除角色成功");

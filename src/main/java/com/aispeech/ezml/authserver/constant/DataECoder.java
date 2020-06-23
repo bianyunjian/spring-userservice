@@ -21,7 +21,13 @@ public enum DataECoder implements ErrorCoder {
      */
     ROLE_NOT_EXIST(100201, "角色数据不存在"),
     ROLE_REPEATED(100202, "角色数据重复"),
-    ROLE_PERMISSION_NOT_EXIST(100203, "角色对应权限不存在");
+    ROLE_PERMISSION_NOT_EXIST(100203, "角色对应权限不存在"),
+    ROLE_IS_DEFAULT(100204, "默认角色禁止修改"),
+    ROLE_HAS_USERS(100205, "角色已关联用户"),
+    /**
+     * 权限数据错误码
+     */
+    PERMISSION_NOT_EXIST(100301, "权限数据不存在");
 
     private Integer errorCode;
     private String desc;

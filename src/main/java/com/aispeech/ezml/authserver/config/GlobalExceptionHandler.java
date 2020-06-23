@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         log.error("处理无效数据异常", e);
         BaseResponse response = new BaseResponse();
         response.setStatus(ApiStatus.FAILURE);
-        response.fail("部分数据无效", e.getErrorCode());
+        response.fail(e.getMessage(), e.getErrorCode());
         return response;
     }
 

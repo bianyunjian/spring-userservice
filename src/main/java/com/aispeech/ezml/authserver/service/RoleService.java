@@ -1,5 +1,6 @@
 package com.aispeech.ezml.authserver.service;
 
+import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.pojo.RoleDTO;
 import com.aispeech.ezml.authserver.pojo.RoleProVO;
 import com.aispeech.ezml.authserver.support.PagedData;
@@ -18,7 +19,7 @@ public interface RoleService {
      * @param id 角色ID
      * @return {@link RoleProVO}
      */
-    RoleProVO getRoleById(Integer id);
+    RoleProVO getRoleById(Integer id) throws InvalidDataException;
 
     /**
      * 分页查询角色列表
@@ -33,19 +34,19 @@ public interface RoleService {
      * @param roleDTO {@link RoleDTO}
      * @return {@link RoleProVO}
      */
-    RoleProVO addRole(RoleDTO roleDTO);
+    RoleProVO addRole(RoleDTO roleDTO) throws InvalidDataException;
 
     /**
      * 修改角色
      * @param roleDTO {@link RoleDTO}
      * @return {@link RoleProVO}
      */
-    RoleProVO updateRole(RoleDTO roleDTO);
+    RoleProVO updateRole(RoleDTO roleDTO) throws InvalidDataException;
 
     /**
      * 删除角色
      * @param id 角色ID
      */
-    void deleteRole(Integer id);
+    void deleteRole(Integer id) throws InvalidDataException;
 
 }

@@ -13,6 +13,7 @@ import lombok.Data;
 public class UserRole {
 
     public static final String COL_USER_ID = "user_id";
+    public static final String COL_ROLE_ID = "role_id";
 
     @TableId(type = IdType.UUID)
     private String id;

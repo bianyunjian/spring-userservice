@@ -18,12 +18,11 @@ import com.aispeech.ezml.authserver.support.PagedData;
 import com.aispeech.ezml.authserver.support.component.PagedParams;
 import com.aispeech.ezml.authserver.support.query.UserQueryParams;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,26 +41,31 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserRoleDao userRoleDao;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public UserInfoVO getUserInfoByLoginName(String userName) {
+    public UserInfoVO getUserInfoByLoginName(String userName) throws InvalidDataException {
         QueryWrapper<User> userWrapper = new QueryWrapper<>();
         userWrapper.eq(User.COL_LOGIN_NAME, userName);
         User user = userDao.selectOne(userWrapper);
         if (null == user) {
-            return null;
+            throw new InvalidDataException("用户不存在,loginName="+userName).with(DataECoder.USER_NOT_EXIST);
         }
+        // 记录登录时间
+        user.setLastLoginTime(LocalDateTime.now());
+        userDao.updateById(user);
+
         Role role = roleDao.findRoleByUserId(user.getId());
         return new UserInfoVO(user, new RoleVO(role));
     }
 
     @Override
-    public UserProVO getUserById(Integer id) {
-        if (null == id) {
-            return null;
+    public UserProVO getUserById(Integer id) throws InvalidDataException {
+        User user = null;
+        if (null != id) {
+            user = userDao.selectById(id);
         }
-        User user = userDao.selectById(id);
         if (null == user) {
-            return null;
+            throw new InvalidDataException("用户不存在,id="+id).with(DataECoder.USER_NOT_EXIST);
         }
         Role role = roleDao.findRoleByUserId(user.getId());
         return new UserProVO(user, new RoleVO(role));
@@ -97,7 +101,15 @@ public class UserServiceImpl implements UserService {
         if (null != repeatOne) {
             throw new InvalidDataException("用户登录名重复，loginName="+user.getLoginName()).with(DataECoder.USER_REPEATED);
         }
+        // 设置默认值
+        //todo 密码是否需要在这里base64编码？
+        user.setId(null);
+        user.setStatus(UserStatus.NORMAL.getDbValue());
+        user.setGmtCreate(LocalDateTime.now());
+        user.setGmtUpdate(LocalDateTime.now());
+        user.setLastLoginTime(LocalDateTime.now());
         userDao.insert(user);
+
         Integer roleId = userDTO.getRoleId();
         Role role = roleDao.selectById(roleId);
         // 检查角色是否存在
@@ -105,6 +117,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidDataException("用户对应角色不存在，roleId="+roleId).with(DataECoder.USER_ROLE_NOT_EXIST);
         }
         userRoleDao.insert(new UserRole(user.getId(), role.getId()));
+
         return new UserProVO(user, new RoleVO(role));
     }
 
@@ -113,22 +126,35 @@ public class UserServiceImpl implements UserService {
     public UserProVO updateUser(UserDTO userDTO) throws InvalidDataException {
         User user = userDTO.getUser();
         User oldOne = userDao.selectById(user.getId());
-        // fixme 用户名可以重复么?
+        // fixme 用户姓名是否可以重复?
+        // 检查用户是否存在
         if (null == oldOne) {
             throw new InvalidDataException("用户不存在，id="+user.getId()).with(DataECoder.USER_NOT_EXIST);
-        } else if (oldOne.getStatus().equals(UserStatus.DISABLED.getDbValue())) {
+        }
+        // 检查用户是否禁用
+        if (oldOne.getStatus().equals(UserStatus.DISABLED.getDbValue())) {
             throw new InvalidDataException("用户已禁用，id="+user.getId()).with(DataECoder.USER_DISABLED);
         }
+        // 更新用户数据
+        oldOne.setUserName(user.getUserName());
+        oldOne.setDepartment(user.getDepartment());
+        oldOne.setPosition(user.getPosition());
+        oldOne.setGmtUpdate(LocalDateTime.now());
+        userDao.updateById(oldOne);
+
         Integer roleId = userDTO.getRoleId();
         Role role = roleDao.selectById(roleId);
+        // 检查用户对应角色是否存在
         if (null == role) {
             throw new InvalidDataException("用户对应角色不存在，roleId="+roleId).with(DataECoder.USER_ROLE_NOT_EXIST);
         }
+        // 更新用户对应角色
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
-        userRoleQueryWrapper.eq(UserRole.COL_USER_ID, user.getId());
+        userRoleQueryWrapper.eq(UserRole.COL_USER_ID, oldOne.getId());
         userRoleDao.delete(userRoleQueryWrapper);
-        userRoleDao.insert(new UserRole(user.getId(), role.getId()));
-        return new UserProVO(user, new RoleVO(role));
+        userRoleDao.insert(new UserRole(oldOne.getId(), role.getId()));
+
+        return new UserProVO(oldOne, new RoleVO(role));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -138,9 +164,11 @@ public class UserServiceImpl implements UserService {
         if (null != userId) {
             user = userDao.selectById(userId);
         }
+        // 检查用户是否存在
         if (null == user) {
             throw new InvalidDataException("用户不存在，id="+userId).with(DataECoder.USER_NOT_EXIST);
         }
+        // 删除用户及关联角色
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
         userRoleQueryWrapper.eq(UserRole.COL_USER_ID, userId);
         userRoleDao.delete(userRoleQueryWrapper);

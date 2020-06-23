@@ -1,6 +1,8 @@
 package com.aispeech.ezml.authserver.model;
 
 import com.aispeech.ezml.authserver.menum.UserStatus;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ public class User {
     public static final String COL_LOGIN_NAME = "login_name";
     public static final String COL_LAST_LOGIN_TIME = "last_login_time";
 
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     private String loginName;

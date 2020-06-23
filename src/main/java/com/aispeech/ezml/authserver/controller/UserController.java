@@ -48,7 +48,7 @@ public class UserController {
 
     @Operation(summary = "根据登录名获取用户信息")
     @PostMapping(path = "/getUserInfo")
-    public UserInfoResponse getUserInfo(@Validated @RequestBody UserInfoRequest request) {
+    public UserInfoResponse getUserInfo(@Validated @RequestBody UserInfoRequest request) throws InvalidDataException {
         String userName = request.getUserName();
         UserInfoVO data = userService.getUserInfoByLoginName(userName);
         UserInfoResponse response = new UserInfoResponse();
@@ -58,7 +58,7 @@ public class UserController {
 
     @Operation(summary = "根据ID获取用户")
     @GetMapping(path = "/{id}")
-    public UserProResponse getOne(@PathVariable("id") @NotNull Integer id) {
+    public UserProResponse getOne(@PathVariable("id") @NotNull Integer id) throws InvalidDataException {
         UserProVO data = userService.getUserById(id);
         UserProResponse response = new UserProResponse();
         response.success("获取用户数据成功", data);
