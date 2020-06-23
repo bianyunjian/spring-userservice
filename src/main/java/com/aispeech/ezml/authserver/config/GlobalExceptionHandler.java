@@ -7,6 +7,7 @@ import com.aispeech.ezml.authserver.exception.InvalidParamException;
 import com.aispeech.ezml.authserver.support.base.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +50,20 @@ public class GlobalExceptionHandler {
         BaseResponse response = new BaseResponse();
         response.setStatus(ApiStatus.FAILURE);
         response.fail(e.getMessage(), e.getErrorCode());
+        return response;
+    }
+
+    /**
+     * 处理参数校验异常1
+     * @param e {@link MethodArgumentNotValidException}
+     * @return {@link BaseResponse}
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public BaseResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("处理参数校验异常1", e);
+        BaseResponse response = new BaseResponse();
+        response.fail(e.getLocalizedMessage(), SysECoder.PARAM_INVALID);
         return response;
     }
 
