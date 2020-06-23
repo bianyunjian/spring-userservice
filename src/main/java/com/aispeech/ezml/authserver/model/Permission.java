@@ -14,4 +14,14 @@ public class Permission {
 
     private String permissionName;
 
+    /**
+     * 权限是否可配置：0-不可配置,1-可配置
+     */
+    private Integer isAssigned;
+
+    /**
+     * 权限类型：0-全部,1-仅用户界面
+     */
+    private Integer type;
+
 }

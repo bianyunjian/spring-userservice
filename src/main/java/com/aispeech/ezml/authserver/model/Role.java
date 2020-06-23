@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * 角色表实体类
  *
@@ -18,6 +20,18 @@ public class Role {
 
     private String roleName;
 
-    private RoleStatus status;
+    /**
+     * 角色状态：0-正常，1-禁用
+     */
+    private Integer status;
+
+    /**
+     * 是否为默认角色：0-否，1-是
+     */
+    private Integer isDefault;
+
+    private LocalDateTime gmtCreate;
+
+    private LocalDateTime gmtUpdate;
 
 }

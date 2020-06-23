@@ -1,6 +1,5 @@
 package com.aispeech.ezml.authserver.pojo;
 
-import com.aispeech.ezml.authserver.menum.RoleStatus;
 import com.aispeech.ezml.authserver.model.Role;
 import com.aispeech.ezml.authserver.validation.group.GUpd;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +7,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * 角色VO
@@ -36,9 +34,11 @@ public class RoleVO extends Role {
     @NotNull
     @Schema(description = "角色状态", example = "0", format = "取值列表：[0,1]")
     @Override
-    public RoleStatus getStatus() {
+    public Integer getStatus() {
         return super.getStatus();
     }
+
+
 
     public RoleVO() {
     }
