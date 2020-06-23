@@ -7,6 +7,7 @@ import com.aispeech.ezml.authserver.tool.JwtTool;
  *
  * @author ZhangXi
  */
+@Deprecated
 public class TokenDO extends JwtTool.TokenData {
 
     public TokenDO() {

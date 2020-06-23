@@ -1,12 +1,15 @@
 package com.aispeech.ezml.authserver.pojo;
 
+import com.aispeech.ezml.authserver.constant.AppConst;
 import com.aispeech.ezml.authserver.model.Role;
 import com.aispeech.ezml.authserver.validation.group.GUpd;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * 角色VO
@@ -31,14 +34,31 @@ public class RoleVO extends Role {
         return super.getRoleName();
     }
 
-    @NotNull
     @Schema(description = "角色状态", example = "0", format = "取值列表：[0,1]")
     @Override
     public Integer getStatus() {
         return super.getStatus();
     }
 
+    @Schema(description = "是否为默认角色：0-否，1-是", example = "1")
+    @Override
+    public Integer getIsDefault() {
+        return super.getIsDefault();
+    }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConst.BASIC_TIME_FORMAT)
+    @Schema(description = "角色创建时间")
+    @Override
+    public LocalDateTime getGmtCreate() {
+        return super.getGmtCreate();
+    }
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConst.BASIC_TIME_FORMAT)
+    @Schema(description = "角色更新时间")
+    @Override
+    public LocalDateTime getGmtUpdate() {
+        return super.getGmtUpdate();
+    }
 
     public RoleVO() {
     }
@@ -48,6 +68,9 @@ public class RoleVO extends Role {
             this.setId(role.getId());
             this.setRoleName(role.getRoleName());
             this.setStatus(role.getStatus());
+            this.setIsDefault(role.getIsDefault());
+            this.setGmtCreate(role.getGmtCreate());
+            this.setGmtUpdate(role.getGmtUpdate());
         }
     }
 }

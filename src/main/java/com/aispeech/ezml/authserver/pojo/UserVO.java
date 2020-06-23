@@ -6,7 +6,6 @@ import com.aispeech.ezml.authserver.validation.CustomEmail;
 import com.aispeech.ezml.authserver.validation.group.GAdd;
 import com.aispeech.ezml.authserver.validation.group.GUpd;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,6 +52,8 @@ public class UserVO extends User {
         return super.getPassword();
     }
 
+    @NotBlank
+    @CustomEmail
     @Schema(description = "用户邮箱", example = "admin@aispeech.com")
     @Override
     public String getEmail() {
@@ -85,6 +86,20 @@ public class UserVO extends User {
         return super.getStatus();
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConst.BASIC_TIME_FORMAT)
+    @Schema(description = "用户创建时间", example = "2020-06-22 14:37:20")
+    @Override
+    public LocalDateTime getGmtCreate() {
+        return super.getGmtCreate();
+    }
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = AppConst.BASIC_TIME_FORMAT)
+    @Schema(description = "用户修改时间", example = "2020-06-22 14:37:20")
+    @Override
+    public LocalDateTime getGmtUpdate() {
+        return super.getGmtUpdate();
+    }
+
     public UserVO() {}
 
     public UserVO(User user) {
@@ -97,8 +112,8 @@ public class UserVO extends User {
         this.setPosition(user.getPosition());
         this.setLastLoginTime(user.getLastLoginTime());
         this.setStatus(user.getStatus());
+        this.setGmtCreate(user.getGmtCreate());
+        this.setGmtUpdate(user.getGmtUpdate());
     }
-
-
 
 }
