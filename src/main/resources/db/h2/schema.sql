@@ -28,7 +28,7 @@ create table `permission` (
     `id` int(11) unsigned not null auto_increment comment '权限ID',
     `permission_name` varchar(225) not null comment '权限名称',
     `is_assigned` tinyint(1) unsigned not null default 0 comment '是否可配置：0-不可配置，1-可配置',
-    `type` int(2) unsigned not null default 0 comment '权限类型',
+    `type` int(2) unsigned not null default 0 comment '权限类型:1-页面,2-接口',
     primary key (`id`)
 ) engine = innodb default charset = utf8mb4;
 
