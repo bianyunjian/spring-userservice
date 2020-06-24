@@ -73,6 +73,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PagedData<UserProVO> queryPagedUsers(PagedParams pagedParams, UserQueryParams queryParams) {
+        // 校验roleId是否为空
+        try {
+            int idVal = Integer.parseInt(queryParams.getRoleId());
+            if (idVal <= 0) {
+                queryParams.setRoleId(null);
+            }
+        } catch (Exception e) {
+            queryParams.setRoleId(null);
+        }
         long total = userDao.queryUserCountWithParams(queryParams);
         PagedData<UserProVO> data = new PagedData<>();
         data.setTotal(total);

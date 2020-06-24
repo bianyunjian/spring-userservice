@@ -9,9 +9,11 @@ import com.aispeech.ezml.authserver.support.ErrorCoder;
  */
 public enum SysECoder implements ErrorCoder {
 
+
     /**
      * 系统错误码
      */
+    DEFAULT(0, "默认值"),
     INNER_ERROR(100001, "系统内部错误"),
     PARAM_INVALID(100002, "参数校验无效");
 
