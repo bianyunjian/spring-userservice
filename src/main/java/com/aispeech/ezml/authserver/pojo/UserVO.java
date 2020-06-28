@@ -52,8 +52,8 @@ public class UserVO extends User {
         return super.getPassword();
     }
 
-    @NotBlank
-    @CustomEmail
+    @NotBlank(groups = {GAdd.class})
+    @CustomEmail(groups = {GAdd.class})
     @Schema(description = "用户邮箱", example = "admin@aispeech.com")
     @Override
     public String getEmail() {
