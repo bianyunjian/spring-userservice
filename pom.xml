@@ -8,11 +8,11 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.aispeech.marktrain</groupId>
-    <artifactId>auth-server</artifactId>
+    <groupId>com.aispeech.ezml</groupId>
+    <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>auth-server</name>
-    <description>Demo project for Spring Boot</description>
+    <name>user-service</name>
+    <description>user service project</description>
 
     <properties>
         <java.version>1.8</java.version>
