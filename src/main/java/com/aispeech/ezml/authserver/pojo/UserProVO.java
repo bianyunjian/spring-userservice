@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * 带角色用户VO
  *
@@ -16,6 +18,9 @@ public class UserProVO extends UserVO {
 
     @Schema(description = "用户对应角色数据")
     private RoleVO role;
+
+    @Schema(description = "用户权限列表")
+    private List<PermissionVO> permissionList;
 
     public UserProVO() {
     }
