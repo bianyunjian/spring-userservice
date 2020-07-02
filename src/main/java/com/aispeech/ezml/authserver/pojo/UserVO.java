@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class UserVO extends User {
     }
 
     @CustomEmail(groups = {GAdd.class})
+    @Email(groups = {GAdd.class})
     @NotBlank(groups = {GAdd.class})
     @Schema(description = "登录名，默认邮箱", example = "admin@aispeech.com")
     @Override
@@ -54,6 +56,7 @@ public class UserVO extends User {
 
     @NotBlank(groups = {GAdd.class})
     @CustomEmail(groups = {GAdd.class})
+    @Email(groups = {GAdd.class})
     @Schema(description = "用户邮箱", example = "admin@aispeech.com")
     @Override
     public String getEmail() {

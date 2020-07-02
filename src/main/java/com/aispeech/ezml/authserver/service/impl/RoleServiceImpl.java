@@ -99,12 +99,13 @@ public class RoleServiceImpl implements RoleService {
         // 新增角色对应权限
         List<Integer> permissionIds = roleDTO.getPermissionIds();
         List<RolePermission> rpList = new ArrayList<>(permissionIds.size());
+        // fixme 是否需要处理表单中传递的权限ID不正确的情况？
         for (Integer permissionId : permissionIds) {
             rpList.add(new RolePermission(role.getId(), permissionId));
         }
         rolePermissionDao.deleteByRoleId(role.getId());
         rolePermissionDao.batchInsert(rpList);
-
+        // 返回封装对象
         List<PermissionVO> permissions = permissionDao.findListByRoleId(role.getId());
         return new RoleProVO(role, permissions);
     }
@@ -125,7 +126,7 @@ public class RoleServiceImpl implements RoleService {
         if (null != repeatRole && !repeatRole.getId().equals(oldOne.getId())) {
             throw new InvalidDataException("角色名称已存在，name="+role.getRoleName()).with(DataECoder.ROLE_REPEATED);
         }
-        // 检查是否为默认角色
+        // 默认角色禁止修改
         if (oldOne.getIsDefault() == Role.IS_DEFAULT_TRUE) {
             throw new InvalidDataException("默认角色禁止修改，id="+role.getId()).with(DataECoder.ROLE_IS_DEFAULT);
         }
@@ -136,12 +137,13 @@ public class RoleServiceImpl implements RoleService {
         // 更新角色对应权限
         List<Integer> permissionIds = roleDTO.getPermissionIds();
         List<RolePermission> rpList = new ArrayList<>(permissionIds.size());
+        // fixme 是否需要处理表单中传递的权限ID不正确的情况？
         for (Integer permissionId : permissionIds) {
             rpList.add(new RolePermission(oldOne.getId(), permissionId));
         }
         rolePermissionDao.deleteByRoleId(oldOne.getId());
         rolePermissionDao.batchInsert(rpList);
-
+        // 返回封装对象
         List<PermissionVO> permissions = permissionDao.findListByRoleId(oldOne.getId());
         return new RoleProVO(oldOne, permissions);
     }
