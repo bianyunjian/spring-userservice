@@ -2,10 +2,7 @@ package com.aispeech.ezml.authserver.controller;
 
 import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.exception.InvalidParamException;
-import com.aispeech.ezml.authserver.pojo.UserDTO;
-import com.aispeech.ezml.authserver.pojo.UserInfoVO;
-import com.aispeech.ezml.authserver.pojo.UserProVO;
-import com.aispeech.ezml.authserver.pojo.UserVO;
+import com.aispeech.ezml.authserver.pojo.*;
 import com.aispeech.ezml.authserver.service.UserService;
 import com.aispeech.ezml.authserver.support.AbstractObjectRequest;
 import com.aispeech.ezml.authserver.support.PagedData;
@@ -19,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +26,14 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
+import java.util.List;
 
 /**
  * 用户API
  *
  * @author ZhangXi
  */
+@Slf4j
 @Tag(name = "/user", description = "用户接口")
 @RestController
 @RequestMapping(path = "/user")
@@ -53,6 +53,28 @@ public class UserController {
         UserInfoVO data = userService.getUserInfoByLoginName(userName);
         UserInfoResponse response = new UserInfoResponse();
         response.success("获取用户信息成功", data);
+        return response;
+    }
+
+    @Operation(summary = "根据ID数组获取用户信息")
+    @PostMapping(path = "/getByIds")
+    public UserIdsResponse getByIds(@Validated @RequestBody UserIdsRequest request) {
+        List<Integer> ids = request.getIds();
+        if (null != ids && ids.isEmpty()) {
+            ids = null;
+        }
+        List<UserNameVO> data = userService.getUsersByIds(ids);
+        UserIdsResponse response = new UserIdsResponse();
+        response.success("查询用户列表成功", data);
+        return response;
+    }
+
+    @Operation(summary = "获取所有用户")
+    @GetMapping(path = "/all")
+    public UserIdsResponse getAll() {
+        List<UserNameVO> data = userService.getAllUsers();
+        UserIdsResponse response = new UserIdsResponse();
+        response.success("获取所有用户成功", data);
         return response;
     }
 
@@ -142,9 +164,19 @@ public class UserController {
     @Schema(description = "带角色用户分页列表数据")
     private static class UserPagedResponse extends BaseResponse<PagedData<UserProVO>> {}
 
+    @Schema(description = "根据id数组筛选的用户列表数据")
+    private static class UserIdsResponse extends BaseResponse<List<UserNameVO>> {}
+
+
     @Schema(description = "用户分页查询请求")
     private static class UserQueryRequest extends QueryRequest<UserQueryParams> {}
 
+    @Data
+    @Schema(description = "用户id数组请求")
+    private static class UserIdsRequest {
+        @Schema(description = "用户id数组", example = "[1,2,3]")
+        private List<Integer> ids;
+    }
 
     @Schema(description = "用户编辑请求")
     @EqualsAndHashCode(callSuper = true)
@@ -186,6 +218,9 @@ public class UserController {
         @Schema(description = "用户ID", example = "1")
         private Integer id;
     }
+
+
+
 
 
 }

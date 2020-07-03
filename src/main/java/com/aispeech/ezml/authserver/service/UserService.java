@@ -1,12 +1,12 @@
 package com.aispeech.ezml.authserver.service;
 
 import com.aispeech.ezml.authserver.exception.InvalidDataException;
-import com.aispeech.ezml.authserver.pojo.UserDTO;
-import com.aispeech.ezml.authserver.pojo.UserInfoVO;
-import com.aispeech.ezml.authserver.pojo.UserProVO;
+import com.aispeech.ezml.authserver.pojo.*;
 import com.aispeech.ezml.authserver.support.PagedData;
 import com.aispeech.ezml.authserver.support.component.PagedParams;
 import com.aispeech.ezml.authserver.support.query.UserQueryParams;
+
+import java.util.List;
 
 /**
  * 用户Service层接口
@@ -28,6 +28,20 @@ public interface UserService {
      * @param id
      */
     UserProVO getUserById(Integer id) throws InvalidDataException;
+
+    /**
+     * 根据ID数组获取用户列表
+     * @return {@link List<UserVO>}
+     */
+    List<UserNameVO> getUsersByIds(List<Integer> ids);
+
+
+    /**
+     * 获取所有用户
+     * @return {@link List<UserVO>}
+     */
+    List<UserNameVO> getAllUsers();
+
 
     /**
      * 查询用户分页列表

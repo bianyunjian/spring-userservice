@@ -1,6 +1,8 @@
 package com.aispeech.ezml.authserver.dao;
 
 import com.aispeech.ezml.authserver.model.User;
+import com.aispeech.ezml.authserver.pojo.UserNameVO;
+import com.aispeech.ezml.authserver.pojo.UserVO;
 import com.aispeech.ezml.authserver.support.query.UserQueryParams;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,5 +33,13 @@ public interface UserDao extends BaseMapper<User> {
      * @return 用户总数
      */
     long queryUserCountWithParams(@Param("query") UserQueryParams queryParams);
+
+
+    /**
+     * 根据ID数组查询用户列表
+     * @param ids ID列表
+     * @return {@link List<UserNameVO>}
+     */
+    List<UserNameVO> getEnabledListByInIds(@Param("ids") List<Integer> ids);
 
 }

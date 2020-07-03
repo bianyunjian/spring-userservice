@@ -34,4 +34,18 @@
         </where>
     </select>
 
+
+    <select id="getEnabledListByInIds" parameterType="list" resultType="com.aispeech.ezml.authserver.pojo.UserNameVO">
+        select id, user_name from <include refid="table"/>
+        <where>
+            status = 0
+            <if test="ids != null">
+                and id in
+                <foreach collection="ids" item="id" open="(" separator="," close=")">
+                    #{id, jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
 </mapper>

@@ -85,6 +85,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserNameVO> getUsersByIds(List<Integer> ids) {
+        return userDao.getEnabledListByInIds(ids);
+    }
+
+    @Override
+    public List<UserNameVO> getAllUsers() {
+        return userDao.getEnabledListByInIds(null);
+    }
+
+    @Override
     public PagedData<UserProVO> queryPagedUsers(PagedParams pagedParams, UserQueryParams queryParams) {
         // 校验roleId是否为空
         try {
