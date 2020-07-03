@@ -7,6 +7,7 @@ import com.aispeech.ezml.authserver.exception.InvalidDataException;
 import com.aispeech.ezml.authserver.model.Permission;
 import com.aispeech.ezml.authserver.model.RolePermission;
 import com.aispeech.ezml.authserver.pojo.PermissionVO;
+import com.aispeech.ezml.authserver.service.CacheService;
 import com.aispeech.ezml.authserver.service.PermissionService;
 import com.aispeech.ezml.authserver.support.PagedData;
 import com.aispeech.ezml.authserver.support.component.PagedParams;
@@ -14,6 +15,7 @@ import com.aispeech.ezml.authserver.support.query.PermissionQueryParams;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +35,12 @@ public class PermissionServiceImpl implements PermissionService {
     private PermissionDao permissionDao;
     @Resource
     private RolePermissionDao rolePermissionDao;
+    @Autowired
+    private CacheService cacheService;
 
     @Override
     public List<PermissionVO> getAll() throws InvalidDataException {
+        // 查询权限
         List<Permission> permissions = permissionDao.selectList(null);
         if (null == permissions) {
             throw new InvalidDataException("无权限数据！").with(DataECoder.PERMISSION_NOT_EXIST);
@@ -77,7 +82,8 @@ public class PermissionServiceImpl implements PermissionService {
             throw new InvalidDataException("权限数据重复,name="+permission.getPermissionName()).with(DataECoder.PERMISSION_REPEATED);
         }
         permissionDao.insert(permission);
-
+        // 更新redis
+        cacheService.cachePermission(permission);
         return new PermissionVO(permission);
     }
 
@@ -98,7 +104,8 @@ public class PermissionServiceImpl implements PermissionService {
         }
         // 更新权限
         permissionDao.updateById(permission);
-
+        // 更新redis
+        cacheService.cachePermission(permission);
         return new PermissionVO(permission);
     }
 
@@ -122,5 +129,7 @@ public class PermissionServiceImpl implements PermissionService {
         }
         // 删除权限
         permissionDao.deleteById(id);
+        // 清除redis
+        cacheService.cleanPermission(id);
     }
 }

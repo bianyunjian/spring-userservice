@@ -10,12 +10,18 @@ import com.aispeech.ezml.authserver.menum.UserStatus;
 import com.aispeech.ezml.authserver.model.Role;
 import com.aispeech.ezml.authserver.model.User;
 import com.aispeech.ezml.authserver.model.UserRole;
+import com.aispeech.ezml.authserver.pojo.RoleVO;
+import com.aispeech.ezml.authserver.pojo.UserDTO;
+import com.aispeech.ezml.authserver.pojo.UserInfoVO;
+import com.aispeech.ezml.authserver.pojo.UserProVO;
+import com.aispeech.ezml.authserver.service.CacheService;
 import com.aispeech.ezml.authserver.pojo.*;
 import com.aispeech.ezml.authserver.service.UserService;
 import com.aispeech.ezml.authserver.support.PagedData;
 import com.aispeech.ezml.authserver.support.component.PagedParams;
 import com.aispeech.ezml.authserver.support.query.UserQueryParams;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +46,8 @@ public class UserServiceImpl implements UserService {
     private UserRoleDao userRoleDao;
     @Resource
     private PermissionDao permissionDao;
+    @Autowired
+    private CacheService cacheService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -53,7 +61,6 @@ public class UserServiceImpl implements UserService {
         // 记录登录时间
         user.setLastLoginTime(LocalDateTime.now());
         userDao.updateById(user);
-
 
         Role role = roleDao.findRoleByUserId(user.getId());
         UserInfoVO resp = new UserInfoVO(user, new RoleVO(role));
@@ -117,7 +124,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidDataException("用户登录名重复，loginName=" + user.getLoginName()).with(DataECoder.USER_REPEATED);
         }
         // 设置默认值
-        //todo 密码是否需要在这里base64编码？
+        //fixme 密码是否需要在这里base64编码？
         user.setId(null);
         user.setStatus(UserStatus.NORMAL.getDbValue());
         user.setGmtCreate(LocalDateTime.now());
@@ -132,7 +139,8 @@ public class UserServiceImpl implements UserService {
             throw new InvalidDataException("用户对应角色不存在，roleId=" + roleId).with(DataECoder.USER_ROLE_NOT_EXIST);
         }
         userRoleDao.insert(new UserRole(user.getId(), role.getId()));
-
+        // 缓存redis
+        cacheService.cacheUser(user);
         return new UserProVO(user, new RoleVO(role));
     }
 
@@ -168,7 +176,8 @@ public class UserServiceImpl implements UserService {
         userRoleQueryWrapper.eq(UserRole.COL_USER_ID, oldOne.getId());
         userRoleDao.delete(userRoleQueryWrapper);
         userRoleDao.insert(new UserRole(oldOne.getId(), role.getId()));
-
+        // 缓存redis
+        cacheService.cacheUser(oldOne);
         return new UserProVO(oldOne, new RoleVO(role));
     }
 
@@ -188,6 +197,8 @@ public class UserServiceImpl implements UserService {
         userRoleQueryWrapper.eq(UserRole.COL_USER_ID, userId);
         userRoleDao.delete(userRoleQueryWrapper);
         userDao.deleteById(userId);
+        // 清除缓存redis
+        cacheService.cleanUser(userId);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -203,6 +214,8 @@ public class UserServiceImpl implements UserService {
         // 启用用户
         user.setStatus(UserStatus.NORMAL.getDbValue());
         userDao.updateById(user);
+        // 缓存redis
+        cacheService.cacheUser(user);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -218,5 +231,8 @@ public class UserServiceImpl implements UserService {
         // 禁用用户
         user.setStatus(UserStatus.DISABLED.getDbValue());
         userDao.updateById(user);
+        // 缓存redis
+        // fixme 禁用的用户应该从缓存中移除么？
+        cacheService.cacheUser(user);
     }
 }
