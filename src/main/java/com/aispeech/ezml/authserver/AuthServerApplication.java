@@ -17,6 +17,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class AuthServerApplication {
 
     public static void main(String[] args) {
+        System.out.println("auth-server开始");
         SpringApplication.run(AuthServerApplication.class, args);
     }
 
