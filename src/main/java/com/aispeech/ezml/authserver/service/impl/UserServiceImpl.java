@@ -76,12 +76,20 @@ public class UserServiceImpl implements UserService {
         User user = null;
         if (null != id) {
             user = userDao.selectById(id);
+            user.setPassword("");
         }
         if (null == user) {
             throw new InvalidDataException("用户不存在,id=" + id).with(DataECoder.USER_NOT_EXIST);
         }
         Role role = roleDao.findRoleByUserId(user.getId());
-        return new UserProVO(user, new RoleVO(role));
+
+
+        UserProVO resp = new UserProVO(user, new RoleVO(role));
+        if (role != null) {
+            List<PermissionVO> permissionVOList = permissionDao.findListByRoleId(role.getId());
+            resp.setPermissionList(permissionVOList);
+        }
+        return resp;
     }
 
     @Override
