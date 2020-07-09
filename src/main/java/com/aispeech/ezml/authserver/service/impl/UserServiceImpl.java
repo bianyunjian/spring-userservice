@@ -26,8 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -142,7 +144,13 @@ public class UserServiceImpl implements UserService {
             throw new InvalidDataException("用户登录名重复，loginName=" + user.getLoginName()).with(DataECoder.USER_REPEATED);
         }
         // 设置默认值
-        //fixme 密码是否需要在这里base64编码？
+        // 密码 需要在这里base64编码？
+        try {
+            Base64.Encoder encoder = Base64.getEncoder();
+            String passwordBase64 = encoder.encodeToString(user.getPassword().getBytes("UTF-8"));   user.setPassword( passwordBase64);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         user.setId(null);
         user.setStatus(UserStatus.NORMAL.getDbValue());
         user.setGmtCreate(LocalDateTime.now());
