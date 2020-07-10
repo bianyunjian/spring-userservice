@@ -79,7 +79,7 @@ public class PermissionServiceImpl implements PermissionService {
         nameQuery.eq(Permission.COL_PERMISSION_NAME, permission.getPermissionName());
         Permission repeatOne = permissionDao.selectOne(nameQuery);
         if (null != repeatOne) {
-            throw new InvalidDataException("权限数据重复,name="+permission.getPermissionName()).with(DataECoder.PERMISSION_REPEATED);
+            throw new InvalidDataException("权限数据重复,name=" + permission.getPermissionName()).with(DataECoder.PERMISSION_REPEATED);
         }
         permissionDao.insert(permission);
         // 更新redis
@@ -93,14 +93,14 @@ public class PermissionServiceImpl implements PermissionService {
         // 检查权限是否存在
         Permission oldOne = permissionDao.selectById(permission.getId());
         if (null == oldOne) {
-            throw new InvalidDataException("待更新权限数据不存在,id="+permission.getId()).with(DataECoder.PERMISSION_NOT_EXIST);
+            throw new InvalidDataException("待更新权限数据不存在,id=" + permission.getId()).with(DataECoder.PERMISSION_NOT_EXIST);
         }
         // 检查权限名称是否重复
         QueryWrapper<Permission> nameQuery = new QueryWrapper<>();
         nameQuery.eq(Permission.COL_PERMISSION_NAME, permission.getPermissionName());
         Permission repeatOne = permissionDao.selectOne(nameQuery);
         if (null != repeatOne && !repeatOne.getId().equals(oldOne.getId())) {
-            throw new InvalidDataException("权限数据重复，name="+permission.getPermissionName()).with(DataECoder.PERMISSION_REPEATED);
+            throw new InvalidDataException("权限数据重复，name=" + permission.getPermissionName()).with(DataECoder.PERMISSION_REPEATED);
         }
         // 更新权限
         permissionDao.updateById(permission);
@@ -118,14 +118,14 @@ public class PermissionServiceImpl implements PermissionService {
             oldOne = permissionDao.selectById(id);
         }
         if (null == oldOne) {
-            throw new InvalidDataException("待删除权限数据不存在,id="+id).with(DataECoder.PERMISSION_NOT_EXIST);
+            throw new InvalidDataException("待删除权限数据不存在,id=" + id).with(DataECoder.PERMISSION_NOT_EXIST);
         }
         // 检查权限是否关联角色
         QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(RolePermission.COL_PERMISSION_ID, id);
-        RolePermission rp = rolePermissionDao.selectOne(queryWrapper);
-        if (null != rp) {
-            throw new InvalidDataException("权限已关联角色，permission id="+id).with(DataECoder.PERMISSION_HAS_ROLES);
+        int referRoleCount = rolePermissionDao.selectCount(queryWrapper);
+        if (referRoleCount > 0) {
+            throw new InvalidDataException("权限已关联角色，permission id=" + id).with(DataECoder.PERMISSION_HAS_ROLES);
         }
         // 删除权限
         permissionDao.deleteById(id);

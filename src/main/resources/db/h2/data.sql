@@ -5,14 +5,14 @@ insert into role values (2, '标注员', 0, 1, '2020-06-16 14:37:20', '2020-06-1
 insert into role values (3, '审核员', 0, 1, '2020-06-16 14:37:20', '2020-06-16 14:37:20');
 insert into role values (4, '训练员', 0, 1, '2020-06-16 14:37:20', '2020-06-16 14:37:20');
 
-insert into permission values (1, '语言模型训练', 1, 0);
-insert into permission values (2, '声学模型训练', 1, 0);
-insert into permission values (3, '模型测试', 1, 0);
-insert into permission values (4, '发布标注任务', 1, 0);
-insert into permission values (5, '人工标注', 1, 0);
-insert into permission values (6, '标注任务审核', 1, 0);
-insert into permission values (7, '团队成员管理', 0, 0);
-insert into permission values (8, '团队权限管理', 0, 0);
+insert into permission values (1, '语言模型训练', 1, 1);
+insert into permission values (2, '声学模型训练', 1, 1);
+insert into permission values (3, '模型测试', 1, 1);
+insert into permission values (4, '发布标注任务', 1, 1);
+insert into permission values (5, '人工标注', 1, 1);
+insert into permission values (6, '标注任务审核', 1, 1);
+insert into permission values (7, '团队成员管理', 0, 1);
+insert into permission values (8, '团队权限管理', 0, 1);
 
 insert into role_permission values ('8a0430ff-0c6d-460d-96df-f23f1ec1a55c', 1, 1);
 insert into role_permission values ('9c8a5885-9cec-46b0-8353-821fbbe28692', 1, 2);
